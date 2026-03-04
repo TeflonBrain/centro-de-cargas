@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Cargas — Sistemas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1a5fb4;
+            --green: #2ea043;
+            --red: #d32f2f;
+            --yellow: #f9a825;
+            --surface: #ffffff;
+            --text: #2c2c3a;
+            --text-muted: #6b7280;
+            --border: #e2e4e9;
+            --bg: #f0f2f5;
+            --radius: 12px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .page {
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem 3rem;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeDown .5s ease-out;
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            max-width: min(320px, 80vw);
+            height: auto;
+            margin-bottom: .75rem;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,.08));
+        }
+        .page-title {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            color: var(--blue);
+            letter-spacing: -.02em;
+        }
+        .page-subtitle {
+            font-size: .85rem;
+            color: var(--text-muted);
+            margin-top: .25rem;
+        }
+        .card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+            padding: 1.75rem 1.5rem 2rem;
+            animation: fadeUp .5s ease-out .1s both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .field { margin-bottom: 1.25rem; }
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .75rem;
+        }
+        @media (max-width: 400px) {
+            .field-row { grid-template-columns: 1fr; }
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: .82rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: .4rem;
+        }
+        label .req { color: var(--red); }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: .7rem .85rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: .95rem;
+            color: var(--text);
+            background: #fafbfc;
+            transition: border-color .2s, box-shadow .2s;
+            outline: none;
+        }
+        input:focus, textarea:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(26,95,180,.12);
+            background: #fff;
+        }
+        textarea { min-height: 120px; resize: vertical; }
+        .char-counter {
+            text-align: right;
+            font-size: .78rem;
+            color: var(--text-muted);
+            margin-top: .3rem;
+            transition: color .2s;
+        }
+        .char-counter.warn { color: var(--yellow); font-weight: 700; }
+        .char-counter.danger { color: var(--red); font-weight: 700; }
+        .btn {
+            width: 100%;
+            padding: .8rem;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform .12s, box-shadow .2s, background .2s;
+        }
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(26,95,180,.3);
+        }
+        .btn-primary:hover { background: #164e9a; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,95,180,.35); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--green);
+            color: #fff;
+            padding: .85rem 1.4rem;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: .92rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,.18);
+            z-index: 100;
+            opacity: 0;
+            transition: transform .35s ease, opacity .35s ease;
+            text-align: center;
+            max-width: 90vw;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: .75rem;
+            color: var(--text-muted);
+        }
+        .footer a { color: var(--blue); text-decoration: none; }
+
+        /* Nivel toggle */
+        .nivel-toggle {
+            display: flex;
+            gap: .5rem;
+            margin-bottom: 1.25rem;
+        }
+        .nivel-btn {
+            flex: 1;
+            padding: .65rem .5rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: #fafbfc;
+            font-family: inherit;
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all .2s ease;
+            text-align: center;
+        }
+        .nivel-btn:hover {
+            border-color: var(--blue);
+            color: var(--text);
+        }
+        .nivel-btn.active {
+            border-color: var(--blue);
+            background: var(--blue);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(26,95,180,.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <img src="data:image/png;base64,%%LOGO_B64%%" alt="Sistemas — Servicio Comunitario" class="logo">
+            <h1 class="page-title">&lt;Centro de Cargas/&gt;</h1>
+            <p class="page-subtitle">Reporta problemas tecnológicos en tu aula</p>
+        </header>
+
+        <main class="card">
+            <div class="field">
+                <label>Nivel <span class="req">*</span></label>
+                <div class="nivel-toggle">
+                    <button type="button" class="nivel-btn" data-nivel="Secundaria" onclick="selectNivel(this)">&#127979; Secundaria</button>
+                    <button type="button" class="nivel-btn" data-nivel="Bachillerato" onclick="selectNivel(this)">&#127891; Bachillerato</button>
+                </div>
+                <input type="hidden" id="nivel" value="">
+            </div>
+
+            <div class="field">
+                <label for="aula">Aula <span class="req">*</span></label>
+                <input type="text" id="aula" placeholder="Ej. Sala 203-B" required autocomplete="off">
+            </div>
+            <div class="field">
+                <label for="nombre">Nombre(s) <span class="req">*</span></label>
+                <input type="text" id="nombre" placeholder="Ej. María Elena" required autocomplete="given-name">
+            </div>
+            <div class="field field-row">
+                <div>
+                    <label for="ap_paterno">Apellido Paterno <span class="req">*</span></label>
+                    <input type="text" id="ap_paterno" placeholder="Ej. López" required>
+                </div>
+                <div>
+                    <label for="ap_materno">Apellido Materno</label>
+                    <input type="text" id="ap_materno" placeholder="Ej. García">
+                </div>
+            </div>
+            <div class="field">
+                <label for="problema">Descripción del Problema <span class="req">*</span></label>
+                <textarea id="problema" maxlength="420"
+                    placeholder="Describe el problema tecnológico que presentas…" required></textarea>
+                <div class="char-counter" id="charCounter">0 / 420</div>
+            </div>
+            <button class="btn btn-primary" id="submitBtn" type="button">Enviar reporte</button>
+        </main>
+
+        <footer class="footer">
+            Sistemas — Servicio Comunitario &middot; <a href="/admin">Panel admin</a>
+        </footer>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function selectNivel(el) {
+            document.querySelectorAll('.nivel-btn').forEach(function(b) { b.classList.remove('active'); });
+            el.classList.add('active');
+            document.getElementById('nivel').value = el.getAttribute('data-nivel');
+        }
+
+        var MAX = 420;
+        var ta = document.getElementById('problema');
+        var counter = document.getElementById('charCounter');
+        var btn = document.getElementById('submitBtn');
+
+        ta.addEventListener('input', function() {
+            var len = ta.value.length;
+            var rem = MAX - len;
+            counter.textContent = len + ' / ' + MAX;
+            counter.classList.remove('warn', 'danger');
+            if (rem < 20) counter.classList.add('danger');
+            else if (rem < 50) counter.classList.add('warn');
+        });
+
+        function showToast(msg, isError) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.background = isError ? 'var(--red)' : 'var(--green)';
+            t.classList.add('show');
+            setTimeout(function() { t.classList.remove('show'); }, 4000);
+        }
+
+        btn.addEventListener('click', async function() {
+            var nivel = document.getElementById('nivel').value;
+            var aula = document.getElementById('aula').value.trim();
+            var nombre = document.getElementById('nombre').value.trim();
+            var apP = document.getElementById('ap_paterno').value.trim();
+            var apM = document.getElementById('ap_materno').value.trim();
+            var prob = ta.value.trim();
+
+            if (!nivel) {
+                showToast('Selecciona el nivel: Secundaria o Bachillerato.', true);
+                return;
+            }
+            if (!aula || !nombre || !apP || !prob) {
+                showToast('Por favor llena todos los campos obligatorios.', true);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Enviando…';
+
+            try {
+                var body = new URLSearchParams({
+                    nivel: nivel, aula: aula, nombre: nombre,
+                    apellido_paterno: apP, apellido_materno: apM, problema: prob
+                });
+                var res = await fetch('/api/report', { method: 'POST', body: body });
+                var data = await res.json();
+                if (res.ok) {
+                    showToast('¡Reporte enviado! Atenderemos tu problema pronto.');
+                    document.getElementById('nivel').value = '';
+                    document.querySelectorAll('.nivel-btn').forEach(function(b) { b.classList.remove('active'); });
+                    document.getElementById('aula').value = '';
+                    document.getElementById('nombre').value = '';
+                    document.getElementById('ap_paterno').value = '';
+                    document.getElementById('ap_materno').value = '';
+                    ta.value = '';
+                    counter.textContent = '0 / 420';
+                    counter.classList.remove('warn', 'danger');
+                } else {
+                    showToast('Error: ' + (data.detail || 'Error al enviar.'), true);
+                }
+            } catch(e) {
+                showToast('Error de conexión. Intenta de nuevo.', true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Enviar reporte';
+            }
+        });
+    </script>
+</body>
+</html>
