@@ -1,4 +1,4 @@
-# Centro de Cargas 🚨
+# Centro de Cargas 
 
 **Sistema de reportes de problemas tecnológicos en aulas**
 Sistemas — Servicio Comunitario · Fundación Azteca
