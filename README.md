@@ -120,4 +120,4 @@ centro-de-cargas/
 
 ## Licencia
 
-Uso interno — Sistemas, Servicio Comunitario, Fundación Azteca.
+Uso interno — Sistemas, Servicio Comunitario, uso común.
